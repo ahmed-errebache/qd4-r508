@@ -1,0 +1,38 @@
+# ---- Maven ----
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# ---- Bases de données locales ----
+data/
+*.db
+*.mv.db
+*.trace.db
+
+# ---- Secrets ----
+.env
+*.env
+application-local.properties
+secrets/
+
+# ---- IDE ----
+.idea/
+*.iml
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+.apt_generated/
+.factorypath
+nbproject/private/
+
+# ---- Systeme ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Logs ----
+*.log
+logs/
