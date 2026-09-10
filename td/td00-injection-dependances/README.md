@@ -134,6 +134,52 @@ J'ai ajouté la propriété réellement lue :
 J'ai aussi versionné explicitement `spring-boot-maven-plugin` — sans le parent,
 il n'hérite d'aucune version et Maven échoue au `spring-boot:run`.
 
+### Le même piège, deuxième symptôme : l'erreur 500 sur `/students/add`
+
+Une fois l'application démarrée, `GET /students` répondait correctement mais
+`POST /students/add?name=Paul` renvoyait **500 Internal Server Error**, la pile
+s'arrêtant sur `HandlerMethodArgumentResolverComposite.resolveArgument`. Le
+contrôleur n'était donc jamais atteint : Spring n'arrivait pas à construire son
+argument.
+
+Cause : `@RequestParam String name` sans nom explicite oblige Spring à lire le
+**nom du paramètre dans le fichier `.class`**. Ce nom n'y figure que si le code a
+été compilé avec l'option `-parameters`. `spring-boot-starter-parent` l'active
+d'office — et, une fois de plus, ce `pom.xml` n'en hérite pas.
+
+Deux corrections, complémentaires :
+
+```xml
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-compiler-plugin</artifactId>
+  <configuration>
+    <parameters>true</parameters>
+  </configuration>
+</plugin>
+```
+
+```java
+@PostMapping("/add")
+public ResponseEntity<String> addStudent(@RequestParam("name") String name) {
+```
+
+Nommer le paramètre rend le contrat HTTP indépendant des options de compilation :
+c'est la protection qui survit à un changement de configuration Maven.
+
+> Penser au `mvn clean` : les `.class` déjà compilés sans `-parameters` ne sont
+> pas régénérés par un simple `spring-boot:run`.
+
+### Gestion des erreurs : `GestionnaireErreurs`
+
+`StudentService.saveStudent()` refuse un nom vide en levant une
+`IllegalArgumentException`. Sans traitement, elle remontait en **500**, ce qui est
+faux : une saisie invalide est une erreur du client, pas une panne du serveur.
+
+Un `@RestControllerAdvice` la traduit en **400 Bad Request** avec le message
+métier. La gestion d'erreurs fait partie de la qualité de développement — c'est
+l'objet du module.
+
 ---
 
 ## Rappel du cours
