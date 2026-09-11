@@ -2,23 +2,38 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Products</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<h1>Products</h1>
-<a href="/products/new">New product</a>
-<table>
-    <thead>
-    <tr><th>ID</th><th>Name</th><th>Price</th><th>Quantity</th></tr>
-    </thead>
-    <tbody>
-    <tr th:each="p : ${products}">
-        <td th:text="${p.id}">1</td>
-        <td th:text="${p.name}">Name</td>
-        <td th:text="${p.price}">0.0</td>
-        <td th:text="${p.quantity}">0</td>
-    </tr>
-    </tbody>
-</table>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3">Products</h1>
+        <a class="btn btn-primary" href="/products/new">New product</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${products}">
+                <td th:text="${p.id}">1</td>
+                <td th:text="${p.name}">Name</td>
+                <td th:text="${p.price} + ' €'">0.00 €</td>
+                <td th:text="${p.quantity}">0</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
