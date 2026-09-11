@@ -6,9 +6,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -22,14 +25,15 @@ public class Product {
     @NotBlank
     private String name;
 
+    @NotNull
     @DecimalMin("0.0")
-    private Double price;
+    private BigDecimal price;
 
     private Integer quantity;
 
     public Product() {}
 
-    public Product(String name, Double price, Integer quantity) {
+    public Product(String name, BigDecimal price, Integer quantity) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;

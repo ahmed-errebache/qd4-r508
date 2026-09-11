@@ -1,0 +1,21 @@
+# Build multi-etapes : Maven n'est plus requis sur la machine hote,
+# c'est le conteneur de build qui compile.
+#
+# Etape 1 - compilation
+FROM maven:3.9.9-eclipse-temurin-21 AS build
+WORKDIR /app
+# Les dependances d'abord : tant que le pom ne change pas, Docker reutilise
+# le cache et ne retelecharge pas tout le depot Maven a chaque build.
+COPY pom.xml .
+RUN mvn -B dependency:go-offline
+COPY src ./src
+RUN mvn -B clean package -DskipTests
+
+# Etape 2 - execution
+# On repart d'une image vierge : le resultat ne contient ni Maven,
+# ni les sources, ni le depot ~/.m2. L'image finale est bien plus legere.
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /app/target/*.jar /app/greeting.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app/greeting.jar"]

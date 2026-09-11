@@ -20,7 +20,7 @@ class ProductRepositoryTest {
 
     @Test
     void saveAndFind() {
-        Product p = new Product("Souris", 19.9, 2);
+        Product p = new Product("Souris", java.math.BigDecimal.valueOf(19.9), 2);
         repository.save(p);
         assertThat(repository.findAll()).hasSize(1);
     }

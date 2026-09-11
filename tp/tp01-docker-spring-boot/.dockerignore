@@ -1,0 +1,9 @@
+# Ce qui ne doit pas partir dans le contexte de build Docker.
+# Sans ce fichier, `docker build .` envoie tout le dossier au demon,
+# y compris target/ et .git/ — build lent et image polluee.
+target/
+.git/
+.idea/
+*.iml
+docs/
+README.md

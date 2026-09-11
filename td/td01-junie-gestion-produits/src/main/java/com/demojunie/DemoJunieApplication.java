@@ -17,9 +17,9 @@ public class DemoJunieApplication {
     @Bean
     CommandLineRunner initData(ProductRepository repository) {
         return args -> {
-            repository.save(new Product("Clavier", 29.90, 10));
-            repository.save(new Product("Souris", 19.90, 20));
-            repository.save(new Product("Ecran", 199.00, 5));
+            repository.save(new Product("Clavier", java.math.BigDecimal.valueOf(29.90), 10));
+            repository.save(new Product("Souris", java.math.BigDecimal.valueOf(19.90), 20));
+            repository.save(new Product("Ecran", java.math.BigDecimal.valueOf(199.00), 5));
         };
     }
 }
